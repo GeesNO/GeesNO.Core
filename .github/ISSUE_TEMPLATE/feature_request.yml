@@ -1,0 +1,54 @@
+name: Feature request
+description: Propose an improvement for GeesNO.Core.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests are evaluated against the Foundation boundary: GeesNO.Core must remain headless, vendor-neutral, AI-neutral, software-neutral, and domain-neutral.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to build or evaluate?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the smallest useful change.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing API, documentation, adapter-side implementation, or post-preview option.
+    validations:
+      required: false
+  - type: textarea
+    id: neutrality
+    attributes:
+      label: Neutrality and host independence impact
+      description: Explain whether this introduces vendor, domain, host, AI, cloud, UI, COM, or proprietary assumptions.
+    validations:
+      required: false
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: Note possible public API, capability-version, package, or behavior changes.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This request is not a security vulnerability report.
+          required: true
+        - label: This request does not require GeesNO.Core Foundation to depend on a specific vendor, host application, AI provider, cloud service, UI, COM, or proprietary API.
+          required: true

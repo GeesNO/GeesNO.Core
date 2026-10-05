@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>GeesNO.Core.Contracts</AssemblyName>
+    <RootNamespace>GeesNO.Core.Contracts</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <PackageId>GeesNO.Core.Contracts</PackageId>
+    <Version>$(GeesNODeveloperPreviewPackageVersion)</Version>
+    <PackageVersion>$(GeesNODeveloperPreviewPackageVersion)</PackageVersion>
+    <Title>GeesNO.Core.Contracts</Title>
+    <Description>Public domain-neutral contracts for GeesNO capabilities, operations and tools.</Description>
+    <PackageTags>$(GeesNOCommonPackageTags);contracts;tools;providers</PackageTags>
+    <PackageReadmeFile>PACKAGE_README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="PACKAGE_README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeesNO.Core.Primitives\GeesNO.Core.Primitives.csproj" />
+  </ItemGroup>
+
+</Project>

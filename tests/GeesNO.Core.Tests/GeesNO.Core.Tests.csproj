@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GeesNO.Core.Contracts\GeesNO.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\GeesNO.Core.Host\GeesNO.Core.Host.csproj" />
+    <ProjectReference Include="..\..\src\GeesNO.Core.Primitives\GeesNO.Core.Primitives.csproj" />
+    <ProjectReference Include="..\..\src\GeesNO.Reference.Simulator\GeesNO.Reference.Simulator.csproj" />
+    <ProjectReference Include="..\..\src\GeesNO.Core.Runtime\GeesNO.Core.Runtime.csproj" />
+    <ProjectReference Include="..\..\samples\GeesNO.Sample.Cli\GeesNO.Sample.Cli.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

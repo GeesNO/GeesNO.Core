@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>GeesNO.Core.Host</AssemblyName>
+    <RootNamespace>GeesNO.Core.Host</RootNamespace>
+    <Description>Executable composition root for GeesNO.Core.</Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeesNO.Core.Runtime\GeesNO.Core.Runtime.csproj" />
+    <ProjectReference Include="..\GeesNO.Core.Contracts\GeesNO.Core.Contracts.csproj" />
+    <ProjectReference Include="..\GeesNO.Core.Primitives\GeesNO.Core.Primitives.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+
+</Project>

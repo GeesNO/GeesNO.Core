@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>GeesNO.Reference.Simulator</AssemblyName>
+    <RootNamespace>GeesNO.Reference.Simulator</RootNamespace>
+    <Description>Non-normative neutral reference simulator for GeesNO.Core.</Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeesNO.Core.Contracts\GeesNO.Core.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

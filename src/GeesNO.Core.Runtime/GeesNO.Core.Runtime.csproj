@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>GeesNO.Core.Runtime</AssemblyName>
+    <RootNamespace>GeesNO.Core.Runtime</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <PackageId>GeesNO.Core.Runtime</PackageId>
+    <Version>$(GeesNODeveloperPreviewPackageVersion)</Version>
+    <PackageVersion>$(GeesNODeveloperPreviewPackageVersion)</PackageVersion>
+    <Title>GeesNO.Core.Runtime</Title>
+    <Description>Public headless Runtime facade for executing typed GeesNO.Core operations.</Description>
+    <PackageTags>$(GeesNOCommonPackageTags);runtime;execution;facade</PackageTags>
+    <PackageReadmeFile>PACKAGE_README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="PACKAGE_README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeesNO.Core.Contracts\GeesNO.Core.Contracts.csproj" />
+    <ProjectReference Include="..\GeesNO.Core.Primitives\GeesNO.Core.Primitives.csproj" />
+  </ItemGroup>
+
+</Project>

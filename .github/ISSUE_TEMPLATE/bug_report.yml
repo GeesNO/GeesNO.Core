@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a non-security defect in GeesNO.Core.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve GeesNO.Core.
+
+        Do not report suspected security vulnerabilities in public issues. Use the private vulnerability reporting channel after the public repository exists and that feature is enabled.
+  - type: input
+    id: geesno-version
+    attributes:
+      label: GeesNO.Core version
+      description: Package version, source commit, or local preview build.
+      placeholder: 0.1.0-preview.1
+    validations:
+      required: true
+  - type: input
+    id: dotnet-version
+    attributes:
+      label: .NET SDK/runtime
+      description: Output of dotnet --info or the relevant SDK/runtime version.
+      placeholder: .NET 8
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, shell, package source, and any relevant host context. Do not include secrets or private paths.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reproducible sequence.
+      placeholder: |
+        1. Create a .NET 8 console project.
+        2. Add package ...
+        3. Run ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Minimal relevant logs
+      description: Include only sanitized public logs. Remove secrets, tokens, local paths, private payloads, and stack traces if they are not necessary.
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This is not a suspected security vulnerability.
+          required: true
+        - label: I removed secrets, credentials, private payloads, and unnecessary local machine details.
+          required: true

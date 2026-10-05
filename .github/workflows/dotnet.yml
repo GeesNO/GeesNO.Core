@@ -1,0 +1,55 @@
+name: GeesNO Core CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-test-run:
+    name: Build, test, and smoke run
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore GeesNO.Core.sln
+
+      - name: Build
+        run: dotnet build GeesNO.Core.sln --no-restore
+
+      - name: Test
+        run: dotnet test GeesNO.Core.sln --no-build
+
+      - name: Smoke run Host
+        run: dotnet run --project src\GeesNO.Core.Host
+
+      - name: Smoke run sample CLI
+        run: dotnet run --project samples/GeesNO.Sample.Cli --no-build -- echo ci-smoke
+
+      - name: Format check
+        run: dotnet format GeesNO.Core.sln --verify-no-changes --no-restore
+
+      - name: Solution list
+        run: dotnet sln GeesNO.Core.sln list
+
+      - name: Diff whitespace check
+        run: git diff --check
+
+      - name: Ensure no tracked bin or obj files
+        shell: pwsh
+        run: |
+          $tracked = git ls-files
+          $matches = $tracked | Where-Object { $_ -match '(^|/)(bin|obj)/' }
+          if ($matches) {
+            $matches | ForEach-Object { Write-Error $_ }
+            exit 1
+          }

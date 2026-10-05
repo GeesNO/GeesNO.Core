@@ -1,0 +1,37 @@
+<Project>
+
+  <PropertyGroup>
+
+    <!-- Framework comun por defecto -->
+    <TargetFramework>net8.0</TargetFramework>
+
+    <!-- C# -->
+    <LangVersion>12.0</LangVersion>
+
+    <Nullable>enable</Nullable>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Documentación XML -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Developer Preview package metadata -->
+    <GeesNODeveloperPreviewPackageVersion>0.1.0-preview.1</GeesNODeveloperPreviewPackageVersion>
+    <GeesNOCommonPackageTags>geesno;geesno-core;developer-preview;integration;capabilities;operations</GeesNOCommonPackageTags>
+    <Authors>GENARO ESCUDERO NOGALES</Authors>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+    <!-- Calidad -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+    <Deterministic>true</Deterministic>
+
+  </PropertyGroup>
+
+</Project>

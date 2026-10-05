@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>GeesNO.Sample.Cli</AssemblyName>
+    <RootNamespace>GeesNO.Sample.Cli</RootNamespace>
+    <Description>Non-normative console sample for GeesNO.Core public Runtime consumption.</Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GeesNO.Core.Runtime\GeesNO.Core.Runtime.csproj" />
+    <ProjectReference Include="..\..\src\GeesNO.Core.Contracts\GeesNO.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\GeesNO.Reference.Simulator\GeesNO.Reference.Simulator.csproj" />
+  </ItemGroup>
+
+</Project>
