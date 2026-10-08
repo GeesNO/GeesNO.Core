@@ -17,9 +17,10 @@ The current public-release preparation line is:
 0.1.0-preview.1 planned
 ```
 
-The repository still has no published GitHub Release and no published NuGet
-packages. Security reporting becomes operational only after the public GitHub
-repository is available and private vulnerability reporting has been enabled.
+The GitHub repository exists but remains private. It still has no published
+GitHub Release and no published NuGet packages. Security reporting becomes
+operational only after the repository is publicly accessible and private
+vulnerability reporting has been enabled.
 
 ## Reporting a Vulnerability
 

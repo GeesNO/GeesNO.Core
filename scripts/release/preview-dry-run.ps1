@@ -24,6 +24,7 @@ $PackagesDirectory = Join-Path $OutputRootFullPath "packages"
 $ExpectedAuthor = "GENARO ESCUDERO NOGALES"
 $ExpectedLicense = "Apache-2.0"
 $ExpectedFramework = "net8.0"
+$ExpectedRepositoryUrl = "https://github.com/GeesNO/GeesNO.Core"
 
 $PublicPackages = @(
     [pscustomobject]@{
@@ -350,8 +351,8 @@ function Test-Package {
     Assert-Equal -Expected $ExpectedPackage.Description -Actual $inspection.Description -Message "Description mismatch for $id."
     Assert-Equal -Expected "PACKAGE_README.md" -Actual $inspection.Readme -Message "Package README mismatch for $id."
     Assert-Equal -Expected "git" -Actual $inspection.RepositoryType -Message "Repository type mismatch for $id."
-    Assert-Equal -Expected "" -Actual $inspection.RepositoryUrl -Message "RepositoryUrl must remain unset for $id."
-    Assert-Equal -Expected "" -Actual $inspection.ProjectUrl -Message "PackageProjectUrl must remain unset for $id."
+    Assert-Equal -Expected $ExpectedRepositoryUrl -Actual $inspection.RepositoryUrl -Message "RepositoryUrl mismatch for $id."
+    Assert-Equal -Expected $ExpectedRepositoryUrl -Actual $inspection.ProjectUrl -Message "PackageProjectUrl mismatch for $id."
     Assert-Equal -Expected $Head -Actual $inspection.RepositoryCommit -Message "Repository commit mismatch for $id."
 
     $dependencySummary = @($inspection.Dependencies | ForEach-Object { "$($_.Id):$($_.Version)" })

@@ -1,6 +1,6 @@
 # Project Status
 
-Status: `0.1.0-preview.1` Developer Preview snapshot prepared locally; public distribution is not completed.
+Status: `0.1.0-preview.1` Developer Preview snapshot prepared locally; the GitHub repository exists privately and public distribution is not completed.
 
 ## Current Scope
 
@@ -37,6 +37,8 @@ Package version:
 ```
 
 The packages are validated locally but are not published to NuGet.
+Their `RepositoryUrl` and `PackageProjectUrl` metadata point to
+`https://github.com/GeesNO/GeesNO.Core`.
 
 `GeesNO.Core.Host`, `GeesNO.Reference.Simulator`, `GeesNO.Sample.Cli` and
 `GeesNO.Core.Tests` are not public packages.
@@ -81,7 +83,7 @@ Completed local readiness work includes:
 
 Remaining publication gates:
 
-- public repository push;
+- public repository visibility;
 - release tag;
 - GitHub Release;
 - NuGet publication;

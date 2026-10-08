@@ -9,10 +9,10 @@ GeesNO.Core is in Developer Preview. Support is best effort and has no SLA.
 Bugs are defects in documented behavior, build/test workflow, public API
 behavior, documentation, samples, or release-preparation material.
 
-After the public repository is available, ordinary bugs may be reported through
-the public issue tracker if they do not disclose a security vulnerability. The
-bug report issue form is prepared for that workflow, but it is not a security
-reporting channel.
+After the repository is publicly accessible, ordinary bugs may be reported
+through the public issue tracker if they do not disclose a security
+vulnerability. The bug report issue form is prepared for that workflow, but it
+is not a security reporting channel.
 
 ## Feature Requests
 
@@ -31,9 +31,10 @@ Do not report suspected security vulnerabilities through public issues, pull
 requests, discussions, or comments.
 
 The intended private disclosure channel is GitHub Private Vulnerability
-Reporting / GitHub Security Advisories after the public repository exists and
-private vulnerability reporting is enabled. Until that is enabled, the official
-private vulnerability channel is a release gate, not an active channel.
+Reporting / GitHub Security Advisories after the repository is publicly
+accessible and private vulnerability reporting is enabled. Until that is
+enabled, the official private vulnerability channel is a release gate, not an
+active channel.
 
 See [SECURITY.md](SECURITY.md).
 

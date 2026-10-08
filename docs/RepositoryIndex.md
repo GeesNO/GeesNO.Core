@@ -124,5 +124,6 @@ be committed.
 
 ## Publication State
 
-The repository is prepared for a future public `main` branch, but this snapshot
-does not push, tag, publish NuGet packages or create a GitHub Release.
+The GitHub repository exists at `https://github.com/GeesNO/GeesNO.Core` and
+remains private, but this snapshot does not tag, publish NuGet packages or
+create a GitHub Release.

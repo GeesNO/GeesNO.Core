@@ -178,12 +178,13 @@ reference simulator. It is not required for third-party adapters.
 ## Support, Security, And Contributions
 
 - Bugs and feature requests: see [SUPPORT.md](SUPPORT.md). Public issue forms
-  are prepared under `.github/ISSUE_TEMPLATE` for use after the public
-  repository exists.
+  are prepared under `.github/ISSUE_TEMPLATE` for use after the repository is
+  publicly accessible.
 - Vulnerabilities: do not report vulnerabilities through public issues, pull
   requests, comments, or discussions. The intended private channel is GitHub
-  Private Vulnerability Reporting / GitHub Security Advisories after the public
-  repository exists and that feature is enabled. See [SECURITY.md](SECURITY.md).
+  Private Vulnerability Reporting / GitHub Security Advisories after the
+  repository is publicly accessible and that feature is enabled. See
+  [SECURITY.md](SECURITY.md).
 - Contributions: Developer Preview contributions use DCO sign-off. See
   [CONTRIBUTING.md](CONTRIBUTING.md) and [DCO](DCO).
 - Trademarks: code licensing does not grant general trademark rights. See
@@ -193,9 +194,10 @@ Developer Preview support is best effort and has no SLA.
 
 ## Release And Publication Gates
 
-No GitHub Release exists, no package is published, and no publication tag is
-created by this snapshot. `RepositoryUrl` and `PackageProjectUrl` remain unset
-until a public repository URL is intentionally applied.
+The GitHub repository exists at `https://github.com/GeesNO/GeesNO.Core` and
+remains private during this preparation phase. No GitHub Release exists, no
+package is published, and no publication tag is created by this snapshot.
+`RepositoryUrl` and `PackageProjectUrl` point to that repository URL.
 
 Completed local publication-preparation gates include:
 

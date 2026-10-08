@@ -83,8 +83,9 @@ The dry-run validates:
 - package dependencies and repository commit metadata;
 - SHA-256 manifest generation.
 
-`RepositoryUrl` and `PackageProjectUrl` remain unset until a public repository
-URL is intentionally applied.
+`RepositoryUrl` and `PackageProjectUrl` are validated as
+`https://github.com/GeesNO/GeesNO.Core`. The repository exists and remains
+private until public distribution is authorized.
 
 ## External Consumption Test
 
@@ -114,6 +115,6 @@ separately authorized.
 
 ## Publication Remains Separate
 
-This repository state is a local publication-preparation snapshot. The next
-steps of remote branch creation, release tag, GitHub Release, NuGet publish and
+This repository state is a local publication-preparation snapshot. Public
+repository visibility, the release tag, GitHub Release, NuGet publish and
 external announcement remain separate explicit actions.
