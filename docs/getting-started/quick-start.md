@@ -199,6 +199,10 @@ payloads, or arbitrary object values.
 
 ## Next Steps
 
+- Run the
+  [Minimal External Integration Sample](../../samples/GeesNO.Minimal.Integration/README.md)
+  when you want a complete project that uses only public packages and shows
+  capability enumeration, positive execution, and fail-closed rejection.
 - Read the [integration guide](../integration/README.md).
 - Check the [public API map](../integration/public-api.md).
 - Review [VERSIONING.md](../../VERSIONING.md) and

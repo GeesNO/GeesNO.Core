@@ -38,6 +38,7 @@ src\GeesNO.Core.Contracts
 src\GeesNO.Core.Runtime
 src\GeesNO.Core.Host
 src\GeesNO.Reference.Simulator
+samples\GeesNO.Minimal.Integration
 samples\GeesNO.Sample.Cli
 tests\GeesNO.Core.Tests
 ```
@@ -78,12 +79,20 @@ profile.
 ## Samples And Tests
 
 ```text
+samples\GeesNO.Minimal.Integration
 samples\GeesNO.Sample.Cli
 tests\GeesNO.Core.Tests
 ```
 
-The sample is informative. Tests provide implementation evidence but do not
-create a formal conformance suite.
+`samples\GeesNO.Minimal.Integration` is a minimal external integration sample
+that uses `PackageReference` to `GeesNO.Core.Runtime` and is intentionally kept
+outside `GeesNO.Core.sln` until the package is available from a public feed.
+
+`samples\GeesNO.Sample.Cli` is an in-repository informative sample that uses
+the non-normative reference simulator.
+
+Tests provide implementation evidence but do not create a formal conformance
+suite.
 
 ## Documentation
 

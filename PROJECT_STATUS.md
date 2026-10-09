@@ -16,6 +16,7 @@ src\GeesNO.Core.Contracts
 src\GeesNO.Core.Runtime
 src\GeesNO.Core.Host
 src\GeesNO.Reference.Simulator
+samples\GeesNO.Minimal.Integration
 samples\GeesNO.Sample.Cli
 tests\GeesNO.Core.Tests
 ```
@@ -40,8 +41,9 @@ The packages are validated locally but are not published to NuGet.
 Their `RepositoryUrl` and `PackageProjectUrl` metadata point to
 `https://github.com/GeesNO/GeesNO.Core`.
 
-`GeesNO.Core.Host`, `GeesNO.Reference.Simulator`, `GeesNO.Sample.Cli` and
-`GeesNO.Core.Tests` are not public packages.
+`GeesNO.Core.Host`, `GeesNO.Reference.Simulator`,
+`GeesNO.Minimal.Integration`, `GeesNO.Sample.Cli` and `GeesNO.Core.Tests` are
+not public packages.
 
 ## Public Runtime Surface
 
@@ -69,6 +71,11 @@ third-party integrations.
 `GeesNO.Sample.Cli` is a non-normative console sample that demonstrates public
 Runtime consumption. It is not a product CLI.
 
+`GeesNO.Minimal.Integration` is a minimal external integration sample. It uses
+only a direct `PackageReference` to `GeesNO.Core.Runtime`, relies on
+`Contracts` and `Primitives` transitively, and is intentionally outside the
+solution until the package is available from a public feed.
+
 ## Release Readiness
 
 Completed local readiness work includes:
@@ -79,6 +86,7 @@ Completed local readiness work includes:
   map, versioning and compatibility notes;
 - local NuGet packaging dry-run for the three public packages;
 - isolated external consumption test from a clean .NET 8 project;
+- minimal external integration sample validated against a local package feed;
 - GitHub issue and pull request templates prepared for future public use.
 
 Remaining publication gates:

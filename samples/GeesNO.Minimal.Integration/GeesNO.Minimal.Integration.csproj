@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>GeesNO.Minimal.Integration</AssemblyName>
+    <RootNamespace>GeesNO.Minimal.Integration</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>Minimal external integration sample for GeesNO.Core public packages.</Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeesNO.Core.Runtime" Version="0.1.0-preview.1" />
+  </ItemGroup>
+
+</Project>

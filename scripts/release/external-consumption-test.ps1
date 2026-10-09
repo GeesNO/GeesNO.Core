@@ -39,8 +39,9 @@ $ConsumerDirectory = Join-Path $WorkspaceRoot "consumer"
 $IsolatedPackagesDirectory = Join-Path $WorkspaceRoot "nuget-packages"
 $IsolatedHttpCacheDirectory = Join-Path $WorkspaceRoot "nuget-http-cache"
 $NuGetConfigPath = Join-Path $WorkspaceRoot "NuGet.Config"
-$ConsumerProject = Join-Path $ConsumerDirectory "consumer.csproj"
-$ProgramPath = Join-Path $ConsumerDirectory "Program.cs"
+$SampleSourceDirectory = Join-Path $RepositoryRoot "samples\GeesNO.Minimal.Integration"
+$SampleProjectFileName = "GeesNO.Minimal.Integration.csproj"
+$ConsumerProject = Join-Path $ConsumerDirectory $SampleProjectFileName
 $AssetsPath = Join-Path $ConsumerDirectory "obj\project.assets.json"
 
 $ExpectedPackageIds = @(
@@ -153,12 +154,50 @@ function Assert-TextDoesNotContain {
     }
 }
 
+function Copy-SampleSource {
+    param(
+        [string]$Source,
+        [string]$Destination
+    )
+
+    if (-not (Test-Path -LiteralPath $Source)) {
+        throw "Sample source '$Source' does not exist."
+    }
+
+    if (Test-Path -LiteralPath $Destination) {
+        Remove-Item -LiteralPath $Destination -Recurse -Force
+    }
+
+    New-Item -ItemType Directory -Path $Destination -Force | Out-Null
+
+    $sourceRoot = ([System.IO.Path]::GetFullPath($Source)).TrimEnd('\', '/') + '\'
+    foreach ($item in Get-ChildItem -LiteralPath $Source -Recurse -Force) {
+        $relativePath = $item.FullName.Substring($sourceRoot.Length)
+        $segments = $relativePath -split '[\\/]'
+        if ($segments -contains "bin" -or $segments -contains "obj") {
+            continue
+        }
+
+        $target = Join-Path $Destination $relativePath
+        if ($item.PSIsContainer) {
+            New-Item -ItemType Directory -Path $target -Force | Out-Null
+            continue
+        }
+
+        $targetDirectory = Split-Path -Parent $target
+        New-Item -ItemType Directory -Path $targetDirectory -Force | Out-Null
+        Copy-Item -LiteralPath $item.FullName -Destination $target
+    }
+}
+
 function Test-IsolatedConsumerSource {
     param([string]$Path)
 
-    $sourceFiles = @(
-        Get-ChildItem -LiteralPath $Path -File -Recurse -Include "*.cs", "*.csproj", "*.props", "*.targets", "NuGet.Config"
-    )
+    $sourceFiles = @(Get-ChildItem -LiteralPath $Path -File -Recurse |
+        Where-Object {
+            $_.Extension -in @(".cs", ".csproj", ".props", ".targets") -or
+            $_.Name -eq "NuGet.Config"
+        })
 
     $forbiddenText = @(
         $RepositoryRoot,
@@ -361,90 +400,8 @@ $nugetConfig = @"
 "@
 $nugetConfig | Set-Content -LiteralPath $NuGetConfigPath -Encoding UTF8
 
-Write-Step "Creating .NET 8 external consumer"
-Invoke-Checked "dotnet" @("new", "console", "--framework", "net8.0", "--output", $ConsumerDirectory, "--no-restore") $WorkspaceRoot
-Invoke-Checked "dotnet" @("add", $ConsumerProject, "package", "GeesNO.Core.Runtime", "--version", $ExpectedVersion, "--no-restore") $WorkspaceRoot
-
-$program = @'
-using GeesNO.Core.Contracts.Capabilities;
-using GeesNO.Core.Contracts.Neutral;
-using GeesNO.Core.Contracts.Operations;
-using GeesNO.Core.Contracts.Tools;
-using GeesNO.Core.Primitives;
-using GeesNO.Core.Runtime;
-
-var providerId = ProviderId.Parse("external.echo-provider");
-var tool = new EchoTool();
-
-using var runtime = new GeesNORuntimeBuilder()
-    .RegisterManifest(new CapabilityManifest(
-        providerId,
-        new VersionInfo(1, 0, 0),
-        new[] { NeutralCapabilities.EchoEntry }))
-    .RegisterTool(providerId, tool)
-    .Build();
-
-var message = "hello from external consumption";
-var positive = await runtime.ExecuteAsync(
-    new NeutralEchoOperation(OperationId.New(), message),
-    new ExecutionOptions(providerId));
-
-Require(positive.IsSuccess, "Positive execution should succeed.");
-Require(positive.Status == OperationExecutionStatus.Success, "Positive execution should report Success.");
-Require(positive.Value is not null, "Positive execution should return a value.");
-Require(positive.Value!.Text == message, "Positive execution returned unexpected text.");
-Require(tool.ExecutionCount == 1, "Echo tool should execute exactly once for the positive path.");
-
-Console.WriteLine($"positive=passed status={positive.Status} value={positive.Value.Text}");
-
-var beforeRejectedExecutionCount = tool.ExecutionCount;
-var rejected = await runtime.ExecuteAsync(
-    new NeutralDescribeOperation(OperationId.New()),
-    new ExecutionOptions(providerId));
-
-Require(!rejected.IsSuccess, "Fail-closed execution should not succeed.");
-Require(rejected.Status == OperationExecutionStatus.Rejected, "Fail-closed execution should report Rejected.");
-Require(tool.ExecutionCount == beforeRejectedExecutionCount, "Fail-closed execution must not invoke the echo tool.");
-Require(rejected.Error is not null, "Fail-closed execution should include a public error.");
-
-Console.WriteLine($"fail_closed=passed status={rejected.Status} error={rejected.Error!.Code}");
-
-static void Require(bool condition, string message)
-{
-    if (!condition)
-    {
-        throw new InvalidOperationException(message);
-    }
-}
-
-public sealed class EchoTool : ITool<NeutralEchoOperation, NeutralEchoResult>
-{
-    public int ExecutionCount { get; private set; }
-
-    public CapabilityReference Capability => NeutralCapabilities.Echo;
-
-    public Task<Result<NeutralEchoResult>> ExecuteAsync(
-        NeutralEchoOperation operation,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(operation);
-        cancellationToken.ThrowIfCancellationRequested();
-
-        ExecutionCount++;
-
-        if (string.IsNullOrWhiteSpace(operation.Text))
-        {
-            return Task.FromResult(Result<NeutralEchoResult>.Failure(
-                new Error("external.echo.empty-text", "Text is required.")));
-        }
-
-        return Task.FromResult(Result<NeutralEchoResult>.Success(
-            new NeutralEchoResult(operation.Text)));
-    }
-}
-'@
-$program | Set-Content -LiteralPath $ProgramPath -Encoding UTF8
-
+Write-Step "Copying minimal external integration sample"
+Copy-SampleSource -Source $SampleSourceDirectory -Destination $ConsumerDirectory
 Test-IsolatedConsumerSource -Path $WorkspaceRoot
 
 Write-Step "Restoring, building, and running external consumer"
@@ -502,6 +459,7 @@ $summary = [pscustomobject]@{
     FeedDirectory = $FeedDirectory
     NuGetConfigPath = $NuGetConfigPath
     IsolatedPackagesDirectory = $IsolatedPackagesDirectory
+    SampleSourceDirectory = $SampleSourceDirectory
     DryRunOutputRoot = $DryRunOutputRootFullPath
     DirectPackage = "GeesNO.Core.Runtime:$ExpectedVersion"
     FeedPackages = $feedPackages

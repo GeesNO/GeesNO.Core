@@ -66,11 +66,11 @@ The first public NuGet package set is:
 | `GeesNO.Core.Contracts` | Public capability, operation, tool, neutral-profile, and system diagnostic contracts. Depends on `Primitives`. |
 | `GeesNO.Core.Runtime` | Public headless Runtime facade used to register manifests/tools, inspect capabilities, and execute operations. Depends on `Contracts` and `Primitives`. |
 
-`GeesNO.Core.Host`, `GeesNO.Reference.Simulator`, `GeesNO.Sample.Cli`, and
-`GeesNO.Core.Tests` are not part of the initial public package set. The Host is
-a composition executable, the simulator is non-normative reference material,
-the sample CLI is informative, and tests are evidence rather than a conformance
-suite.
+`GeesNO.Core.Host`, `GeesNO.Reference.Simulator`, `GeesNO.Sample.Cli`,
+`GeesNO.Minimal.Integration`, and `GeesNO.Core.Tests` are not part of the
+initial public package set. The Host is a composition executable, the simulator
+is non-normative reference material, the sample projects are informative, and
+tests are evidence rather than a conformance suite.
 
 ## Installation
 
@@ -110,6 +110,10 @@ See [docs/getting-started/quick-start.md](docs/getting-started/quick-start.md)
 for a complete minimal example that uses only public packages and implements a
 small provider/tool without depending on `GeesNO.Reference.Simulator`.
 
+For a complete runnable project, see the
+[Minimal External Integration Sample](samples/GeesNO.Minimal.Integration/README.md).
+It uses a direct `PackageReference` to `GeesNO.Core.Runtime` and only public API.
+
 ## Integration Model
 
 The Runtime entry point is:
@@ -146,6 +150,7 @@ else
 For adapter authors, start with:
 
 - [Quick Start](docs/getting-started/quick-start.md)
+- [Minimal External Integration Sample](samples/GeesNO.Minimal.Integration/README.md)
 - [Integration Guide](docs/integration/README.md)
 - [Public API Map](docs/integration/public-api.md)
 - [Normative and Informative Material](docs/NORMATIVE_AND_INFORMATIVE.md)
@@ -175,6 +180,10 @@ dotnet format GeesNO.Core.sln --verify-no-changes --no-restore
 The sample CLI demonstrates public Runtime consumption with the non-normative
 reference simulator. It is not required for third-party adapters.
 
+The minimal integration sample demonstrates the external package-consumption
+path with a `PackageReference` to `GeesNO.Core.Runtime`. It is intentionally not
+part of `GeesNO.Core.sln` until the package is available from a public feed.
+
 ## Support, Security, And Contributions
 
 - Bugs and feature requests: see [SUPPORT.md](SUPPORT.md). Public issue forms
@@ -203,6 +212,7 @@ Completed local publication-preparation gates include:
 
 - release dry-run;
 - external consumption test from a clean project using packages;
+- minimal external integration sample validation from a local package feed;
 
 Before public distribution, the remaining gates include:
 

@@ -16,6 +16,8 @@
 - Minimal public Runtime facade for registering manifests/tools, inspecting
   capabilities and executing typed operations.
 - Non-normative reference simulator and sample CLI.
+- Minimal external integration sample using a direct `GeesNO.Core.Runtime`
+  package reference and public API only.
 - Public integration documentation, Quick Start, API map, versioning,
   compatibility, security, support and contribution policies.
 - Local release dry-run and isolated external package consumption scripts.
@@ -42,3 +44,5 @@
   a local feed and resolve `Contracts` and `Primitives` transitively.
 - Runtime positive execution and fail-closed rejection are validated through
   public API.
+- The minimal external integration sample is validated against the local
+  dry-run feed before package publication.
