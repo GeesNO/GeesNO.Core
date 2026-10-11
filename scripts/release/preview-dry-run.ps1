@@ -410,7 +410,8 @@ if ($outputRootComparable -eq $releaseDryRunRootComparable -or
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 Write-Step "Collecting git and SDK state"
-$branch = (& git branch --show-current).Trim()
+$branch = [string](& git branch --show-current)
+$branch = $branch.Trim()
 $head = (& git rev-parse HEAD).Trim()
 $remote = (& git remote -v)
 $dotnetVersion = (& dotnet --version).Trim()
