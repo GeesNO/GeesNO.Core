@@ -83,7 +83,8 @@ public sealed class RepositoryHygieneArchitectureTests
                 "ISSUE_TEMPLATE/config.yml",
                 "ISSUE_TEMPLATE/feature_request.yml",
                 "pull_request_template.md",
-                "workflows/dotnet.yml"
+                "workflows/dotnet.yml",
+                "workflows/nuget-publish.yml"
             ],
             files);
         Assert.Equal(["ISSUE_TEMPLATE", "workflows"], directories);

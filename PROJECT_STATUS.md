@@ -87,10 +87,14 @@ Completed local readiness work includes:
 - local NuGet packaging dry-run for the three public packages;
 - isolated external consumption test from a clean .NET 8 project;
 - minimal external integration sample validated against a local package feed;
+- manual NuGet Trusted Publishing workflow prepared for later GitHub Actions
+  execution;
 - GitHub issue and pull request templates prepared for future public use.
 
 Remaining publication gates:
 
+- push of the prepared publishing workflow to GitHub;
+- creation of the NuGet Trusted Publishing policy;
 - public repository visibility;
 - release tag;
 - GitHub Release;
@@ -99,8 +103,8 @@ Remaining publication gates:
   Advisories;
 - explicit final publication authorization.
 
-No release tag, GitHub Release or NuGet package has been published by this
-snapshot.
+No release tag, GitHub Release, NuGet package or Trusted Publishing policy has
+been published or created by this snapshot.
 
 ## Validation Baseline
 

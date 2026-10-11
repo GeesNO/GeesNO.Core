@@ -5,6 +5,7 @@
 ```text
 GeesNO.Core.sln
 .github\workflows\dotnet.yml
+.github\workflows\nuget-publish.yml
 .github\ISSUE_TEMPLATE\bug_report.yml
 .github\ISSUE_TEMPLATE\feature_request.yml
 .github\ISSUE_TEMPLATE\config.yml
@@ -115,11 +116,18 @@ docs\releases\0.1.0-preview.1.md
 
 ```text
 .github\workflows\dotnet.yml
+.github\workflows\nuget-publish.yml
 ```
 
-The workflow runs restore, build, tests, Host smoke run, sample CLI smoke run,
+`dotnet.yml` runs restore, build, tests, Host smoke run, sample CLI smoke run,
 format check, solution listing, whitespace check and tracked `bin`/`obj`
 protection. It does not publish packages or release artifacts.
+
+`nuget-publish.yml` is a manual-only Trusted Publishing workflow prepared for a
+future NuGet.org publication. It validates a requested release tag, runs the
+release dry-run and external consumption test, authenticates with
+`NuGet/login@v1`, and publishes only the three public package IDs after manual
+confirmation.
 
 ## Release Scripts
 

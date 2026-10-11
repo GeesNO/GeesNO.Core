@@ -102,6 +102,51 @@ Use `-AllowedUntrackedFile <path>` only for local validation when an explicitly
 known non-release local file is present. Do not use that option for a final
 publication run.
 
+## Trusted Publishing Workflow
+
+NuGet publication is prepared through a separate manual GitHub Actions workflow:
+
+```text
+.github\workflows\nuget-publish.yml
+```
+
+The workflow is intentionally `workflow_dispatch` only. It does not publish on
+push, pull request, normal CI completion, tag creation or GitHub Release
+creation.
+
+Publication flow:
+
+1. validate the requested release tag, for example `v0.1.0-preview.1`;
+2. fetch the tag and `origin/main`;
+3. verify that the tag resolves to a commit reachable from `origin/main`;
+4. check out the tag in detached mode;
+5. derive the NuGet version by removing the leading `v`;
+6. run the release dry-run and isolated external consumption test before
+   requesting any NuGet credential;
+7. inspect that exactly the three expected `.nupkg` and `.snupkg` files were
+   produced for that version and commit;
+8. authenticate with NuGet Trusted Publishing through `NuGet/login@v1`;
+9. publish packages manually to NuGet.org in dependency order;
+10. verify the public packages on NuGet.org;
+11. create the GitHub Release only after package publication is confirmed.
+
+The NuGet login identity is the NuGet user `Genarq`. The package owner and
+Trusted Publishing policy owner is the NuGet organization `GeesNO`.
+
+The workflow publishes only:
+
+```text
+GeesNO.Core.Primitives
+GeesNO.Core.Contracts
+GeesNO.Core.Runtime
+```
+
+It uses `--skip-duplicate` so a manually retried workflow can recover from a
+partial publication without turning already-published packages into a hard
+failure. Each `.nupkg` is pushed while its matching `.snupkg` is present in the
+same directory, using NuGet.org's V3 source so symbol packages are published
+with their corresponding main packages.
+
 ## Release Notes
 
 Prepared release notes live at:

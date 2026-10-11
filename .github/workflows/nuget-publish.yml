@@ -1,0 +1,211 @@
+name: Publish NuGet packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to publish, for example v0.1.0-preview.1."
+        required: true
+        type: string
+      publish_confirmation:
+        description: 'Type "publish" to confirm NuGet publication.'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Validate and publish NuGet packages
+    runs-on: windows-latest
+
+    env:
+      NUGET_SOURCE: https://api.nuget.org/v3/index.json
+      NUGET_USER: Genarq
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Validate release tag
+        shell: pwsh
+        env:
+          RELEASE_TAG_INPUT: ${{ inputs.release_tag }}
+          PUBLISH_CONFIRMATION: ${{ inputs.publish_confirmation }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          function Invoke-Checked {
+            param(
+              [string]$FileName,
+              [string[]]$Arguments
+            )
+
+            Write-Host ("$FileName {0}" -f ($Arguments -join " "))
+            & $FileName @Arguments
+            if ($LASTEXITCODE -ne 0) {
+              throw "Command failed with exit code ${LASTEXITCODE}: $FileName $($Arguments -join ' ')"
+            }
+          }
+
+          if ($env:PUBLISH_CONFIRMATION -ne "publish") {
+            throw 'Publication confirmation must be exactly "publish".'
+          }
+
+          $tag = $env:RELEASE_TAG_INPUT.Trim()
+          if ($tag -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z]+(?:\.[0-9A-Za-z]+)*)?$') {
+            throw "Release tag '$tag' must be a v-prefixed semantic version tag."
+          }
+
+          $packageVersion = $tag.Substring(1)
+          Invoke-Checked "git" @("fetch", "--force", "origin", "refs/heads/main:refs/remotes/origin/main")
+          Invoke-Checked "git" @("fetch", "--force", "origin", "+refs/tags/${tag}:refs/tags/${tag}")
+
+          $tagCommit = (& git rev-list -n 1 $tag).Trim()
+          if ([string]::IsNullOrWhiteSpace($tagCommit)) {
+            throw "Release tag '$tag' does not resolve to a commit."
+          }
+
+          Invoke-Checked "git" @("merge-base", "--is-ancestor", $tagCommit, "origin/main")
+          Invoke-Checked "git" @("checkout", "--detach", $tag)
+
+          $checkedOutCommit = (& git rev-parse HEAD).Trim()
+          if ($checkedOutCommit -ne $tagCommit) {
+            throw "Checked out '$checkedOutCommit' but tag '$tag' resolves to '$tagCommit'."
+          }
+
+          "RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "PACKAGE_VERSION=$packageVersion" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "RELEASE_COMMIT=$checkedOutCommit" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+          Write-Host "Release tag: $tag"
+          Write-Host "Package version: $packageVersion"
+          Write-Host "Release commit: $checkedOutCommit"
+
+      - name: Run release dry-run and external consumption test
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          .\scripts\release\external-consumption-test.ps1 `
+            -ExpectedVersion $env:PACKAGE_VERSION `
+            -DryRunOutputRoot "artifacts/release-dry-run/$env:PACKAGE_VERSION"
+
+      - name: Verify publish artifact set
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $packageIds = @(
+            "GeesNO.Core.Primitives",
+            "GeesNO.Core.Contracts",
+            "GeesNO.Core.Runtime"
+          )
+
+          $packagesDirectory = Join-Path "artifacts/release-dry-run/$env:PACKAGE_VERSION" "packages"
+          if (-not (Test-Path -LiteralPath $packagesDirectory)) {
+            throw "Packages directory '$packagesDirectory' does not exist."
+          }
+
+          $expectedArtifacts = @()
+          foreach ($packageId in $packageIds) {
+            $expectedArtifacts += "$packageId.$env:PACKAGE_VERSION.nupkg"
+            $expectedArtifacts += "$packageId.$env:PACKAGE_VERSION.snupkg"
+          }
+
+          $actualArtifacts = @(Get-ChildItem -LiteralPath $packagesDirectory -File |
+            Where-Object { $_.Extension -in @(".nupkg", ".snupkg") } |
+            Select-Object -ExpandProperty Name |
+            Sort-Object)
+
+          $expectedJoined = ($expectedArtifacts | Sort-Object) -join "|"
+          $actualJoined = ($actualArtifacts | Sort-Object) -join "|"
+          if ($expectedJoined -ne $actualJoined) {
+            throw "Publish artifact list mismatch. Expected '$expectedJoined' but found '$actualJoined'."
+          }
+
+          $inspectionPath = "artifacts/release-dry-run/$env:PACKAGE_VERSION/package-inspection.json"
+          if (-not (Test-Path -LiteralPath $inspectionPath)) {
+            throw "Package inspection file '$inspectionPath' does not exist."
+          }
+
+          $inspection = Get-Content -Raw -LiteralPath $inspectionPath | ConvertFrom-Json
+          $inspectedIds = @($inspection | ForEach-Object { $_.Id } | Sort-Object)
+          $expectedIds = @($packageIds | Sort-Object)
+          if (($expectedIds -join "|") -ne ($inspectedIds -join "|")) {
+            throw "Inspected package IDs mismatch. Expected '$($expectedIds -join "|")' but found '$($inspectedIds -join "|")'."
+          }
+
+          foreach ($package in $inspection) {
+            if ($package.Version -ne $env:PACKAGE_VERSION) {
+              throw "$($package.Id) version '$($package.Version)' does not match '$env:PACKAGE_VERSION'."
+            }
+
+            if ($package.RepositoryCommit -ne $env:RELEASE_COMMIT) {
+              throw "$($package.Id) repository commit '$($package.RepositoryCommit)' does not match '$env:RELEASE_COMMIT'."
+            }
+          }
+
+      - name: NuGet login
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ env.NUGET_USER }}
+
+      - name: Publish packages
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
+            throw "NuGet/login did not return a temporary API key."
+          }
+
+          $packageIds = @(
+            "GeesNO.Core.Primitives",
+            "GeesNO.Core.Contracts",
+            "GeesNO.Core.Runtime"
+          )
+
+          $packagesDirectory = Join-Path "artifacts/release-dry-run/$env:PACKAGE_VERSION" "packages"
+          Push-Location $packagesDirectory
+          try {
+            foreach ($packageId in $packageIds) {
+              $nupkg = "$packageId.$env:PACKAGE_VERSION.nupkg"
+              $snupkg = "$packageId.$env:PACKAGE_VERSION.snupkg"
+
+              if (-not (Test-Path -LiteralPath $nupkg)) {
+                throw "Package '$nupkg' does not exist."
+              }
+
+              if (-not (Test-Path -LiteralPath $snupkg)) {
+                throw "Symbol package '$snupkg' does not exist."
+              }
+
+              Write-Host "dotnet nuget push $nupkg --source $env:NUGET_SOURCE --api-key *** --skip-duplicate"
+              dotnet nuget push $nupkg `
+                --source $env:NUGET_SOURCE `
+                --api-key $env:NUGET_API_KEY `
+                --skip-duplicate
+              if ($LASTEXITCODE -ne 0) {
+                throw "dotnet nuget push failed for '$nupkg' with exit code ${LASTEXITCODE}."
+              }
+            }
+          }
+          finally {
+            Pop-Location
+          }
