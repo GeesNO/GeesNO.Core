@@ -37,7 +37,7 @@ internal static class RuntimeCatalogTestData
         UndoSupportLevel undoSupportLevel = UndoSupportLevel.None)
     {
         var restrictions = supportLevel is CapabilitySupportLevel.Partial or CapabilitySupportLevel.Emulated
-            ? [new CapabilityRestriction("limit.size", "Size is limited")]
+            ? new[] { new CapabilityRestriction("limit.size", "Size is limited") }
             : Array.Empty<CapabilityRestriction>();
         var unavailableReason = supportLevel == CapabilitySupportLevel.Unavailable
             ? "Dependency unavailable"

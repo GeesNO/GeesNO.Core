@@ -396,6 +396,9 @@ $nugetConfig = @"
     <clear />
     <add key="geesno-local-preview" value="$escapedFeedDirectory" />
   </packageSources>
+  <fallbackPackageFolders>
+    <clear />
+  </fallbackPackageFolders>
 </configuration>
 "@
 $nugetConfig | Set-Content -LiteralPath $NuGetConfigPath -Encoding UTF8
@@ -411,7 +414,7 @@ try {
     $env:NUGET_PACKAGES = $IsolatedPackagesDirectory
     $env:NUGET_HTTP_CACHE_PATH = $IsolatedHttpCacheDirectory
 
-    $restoreOutput = Invoke-Captured "dotnet" @("restore", $ConsumerProject, "--configfile", $NuGetConfigPath, "--packages", $IsolatedPackagesDirectory, "--no-cache") $WorkspaceRoot
+    $restoreOutput = Invoke-Captured "dotnet" @("restore", $ConsumerProject, "--configfile", $NuGetConfigPath, "--packages", $IsolatedPackagesDirectory, "--no-cache", "-p:DisableImplicitNuGetFallbackFolder=true") $WorkspaceRoot
     $packageGraphOutput = Invoke-Captured "dotnet" @("list", $ConsumerProject, "package", "--include-transitive") $WorkspaceRoot
     $buildOutput = Invoke-Captured "dotnet" @("build", $ConsumerProject, "-c", "Release", "--no-restore") $WorkspaceRoot
     $runOutput = Invoke-Captured "dotnet" @("run", "--project", $ConsumerProject, "-c", "Release", "--no-build") $WorkspaceRoot

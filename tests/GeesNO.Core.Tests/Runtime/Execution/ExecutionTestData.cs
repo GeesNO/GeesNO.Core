@@ -36,7 +36,7 @@ internal static class ExecutionTestData
         UndoSupportLevel undoSupportLevel = UndoSupportLevel.None)
     {
         var restrictions = supportLevel is CapabilitySupportLevel.Partial or CapabilitySupportLevel.Emulated
-            ? [new CapabilityRestriction("limit.test", "Test restriction")]
+            ? new[] { new CapabilityRestriction("limit.test", "Test restriction") }
             : Array.Empty<CapabilityRestriction>();
         var unavailableReason = supportLevel == CapabilitySupportLevel.Unavailable
             ? "Unavailable for test"
