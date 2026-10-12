@@ -17,6 +17,8 @@ public sealed class HostProcessTests
             RedirectStandardError = true
         };
         process.StartInfo.ArgumentList.Add("run");
+        process.StartInfo.ArgumentList.Add("-c");
+        process.StartInfo.ArgumentList.Add("Release");
         process.StartInfo.ArgumentList.Add("--no-build");
         process.StartInfo.ArgumentList.Add("--project");
         process.StartInfo.ArgumentList.Add(Path.Combine("src", "GeesNO.Core.Host", "GeesNO.Core.Host.csproj"));
