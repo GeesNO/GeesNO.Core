@@ -8,6 +8,8 @@ public sealed class HostProcessTests
     public async Task Dotnet_run_host_finishes_successfully_with_minimal_output()
     {
         var root = FindRepositoryRoot();
+        var configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name
+            ?? throw new InvalidOperationException("Could not determine the test build configuration.");
         using var process = new Process();
         process.StartInfo = new ProcessStartInfo
         {
@@ -18,7 +20,7 @@ public sealed class HostProcessTests
         };
         process.StartInfo.ArgumentList.Add("run");
         process.StartInfo.ArgumentList.Add("-c");
-        process.StartInfo.ArgumentList.Add("Release");
+        process.StartInfo.ArgumentList.Add(configuration);
         process.StartInfo.ArgumentList.Add("--no-build");
         process.StartInfo.ArgumentList.Add("--project");
         process.StartInfo.ArgumentList.Add(Path.Combine("src", "GeesNO.Core.Host", "GeesNO.Core.Host.csproj"));
