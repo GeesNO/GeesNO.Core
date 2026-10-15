@@ -45,7 +45,8 @@ public sealed class ProjectArchitectureTests
     private static readonly string[] ExecutableProjects =
     [
         "GeesNO.Core.Host",
-        "GeesNO.Sample.Cli"
+        "GeesNO.Sample.Cli",
+        "GeesNO.Core.Tests"
     ];
 
     [Fact]
@@ -78,7 +79,7 @@ public sealed class ProjectArchitectureTests
     }
 
     [Fact]
-    public void Only_Host_and_the_non_normative_sample_are_executable_projects()
+    public void Only_Host_Tests_and_the_non_normative_sample_are_executable_projects()
     {
         foreach (var projectName in ExpectedProjectReferences.Keys)
         {

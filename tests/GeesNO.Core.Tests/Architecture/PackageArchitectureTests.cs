@@ -14,7 +14,7 @@ public sealed class PackageArchitectureTests
             ["Microsoft.Extensions.Hosting"],
             ArchitectureProjectFile.Load("GeesNO.Core.Host").PackageReferences);
         Assert.Equal(
-            ["Microsoft.NET.Test.Sdk", "xunit", "xunit.runner.visualstudio"],
+            ["Microsoft.NET.Test.Sdk", "xunit.v3", "xunit.runner.visualstudio"],
             ArchitectureProjectFile.Load("GeesNO.Core.Tests").PackageReferences);
     }
 

@@ -24,7 +24,7 @@ public sealed class NeutralProfileRuntimeFacadeTests
 
         var operation = new NeutralEchoOperation(OperationId.New(), "neutral text");
 
-        var result = await runtime.ExecuteAsync(operation, new ExecutionOptions(providerId));
+        var result = await runtime.ExecuteAsync(operation, new ExecutionOptions(providerId), TestContext.Current.CancellationToken);
 
         Assert.Equal(OperationExecutionStatus.Success, result.Status);
         Assert.True(result.IsSuccess);

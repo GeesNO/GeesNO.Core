@@ -26,9 +26,9 @@ public sealed class HostProcessTests
         process.StartInfo.ArgumentList.Add(Path.Combine("src", "GeesNO.Core.Host", "GeesNO.Core.Host.csproj"));
 
         process.Start();
-        var stdout = await process.StandardOutput.ReadToEndAsync();
-        var stderr = await process.StandardError.ReadToEndAsync();
-        await process.WaitForExitAsync();
+        var stdout = await process.StandardOutput.ReadToEndAsync(TestContext.Current.CancellationToken);
+        var stderr = await process.StandardError.ReadToEndAsync(TestContext.Current.CancellationToken);
+        await process.WaitForExitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(0, process.ExitCode);
         Assert.Contains("GeesNO.Core.Host starting", stdout, StringComparison.Ordinal);

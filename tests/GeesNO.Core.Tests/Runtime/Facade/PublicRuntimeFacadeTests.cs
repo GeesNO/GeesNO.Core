@@ -43,7 +43,7 @@ public sealed class PublicRuntimeFacadeTests
 
         var result = await runtime.ExecuteAsync(
             new FacadeOperation(OperationId.New(), reference),
-            new ExecutionOptions(providerId));
+            new ExecutionOptions(providerId), TestContext.Current.CancellationToken);
 
         Assert.Equal(OperationExecutionStatus.Success, result.Status);
         Assert.True(result.IsSuccess);
@@ -95,7 +95,7 @@ public sealed class PublicRuntimeFacadeTests
 
         var result = await runtime.ExecuteAsync(
             new FacadeOperation(OperationId.New(), reference),
-            new ExecutionOptions(ProviderId.Parse("provider.b")));
+            new ExecutionOptions(ProviderId.Parse("provider.b")), TestContext.Current.CancellationToken);
 
         Assert.Equal(OperationExecutionStatus.Success, result.Status);
         Assert.Equal("provider.b", result.ProviderId?.Value);
@@ -111,7 +111,7 @@ public sealed class PublicRuntimeFacadeTests
         var tool = new FacadeTool(reference);
         using var runtime = BuildRuntime(Registration("provider.only", [Entry(reference)], [tool]));
 
-        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(OperationExecutionStatus.Success, result.Status);
         Assert.Equal("provider.only", result.ProviderId?.Value);
@@ -131,7 +131,7 @@ public sealed class PublicRuntimeFacadeTests
             Registration("provider.a", [Entry(reference)], [toolA]),
             Registration("provider.b", [Entry(reference)], [toolB]));
 
-        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -153,7 +153,7 @@ public sealed class PublicRuntimeFacadeTests
 
         var result = await runtime.ExecuteAsync(
             new FacadeOperation(OperationId.New(), reference),
-            new ExecutionOptions(ProviderId.Parse("provider.missing")));
+            new ExecutionOptions(ProviderId.Parse("provider.missing")), TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -176,7 +176,7 @@ public sealed class PublicRuntimeFacadeTests
 
         var result = await runtime.ExecuteAsync(
             new FacadeOperation(OperationId.New(), reference),
-            new ExecutionOptions(ProviderId.Parse("provider.empty")));
+            new ExecutionOptions(ProviderId.Parse("provider.empty")), TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -196,7 +196,8 @@ public sealed class PublicRuntimeFacadeTests
         using var runtime = BuildRuntime(Registration("provider.available", [Entry(reference)], [tool]));
 
         var result = await runtime.ExecuteAsync(
-            new FacadeOperation(OperationId.New(), Reference("system.missing")));
+            new FacadeOperation(OperationId.New(), Reference("system.missing")),
+            cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -216,7 +217,7 @@ public sealed class PublicRuntimeFacadeTests
         var tool = new FacadeTool(reference, (_, _) => Task.FromResult(Result<FacadeResult>.Failure(error)));
         using var runtime = BuildRuntime(Registration("provider.facade", [Entry(reference)], [tool]));
 
-        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -235,7 +236,7 @@ public sealed class PublicRuntimeFacadeTests
         var tool = new FacadeTool(reference);
         using var runtime = BuildRuntime(Registration("provider.facade", [Entry(reference)], [tool]));
 
-        var result = await runtime.ExecuteAsync(new AlternateFacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new AlternateFacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -255,7 +256,7 @@ public sealed class PublicRuntimeFacadeTests
             new InvalidOperationException("secret local path C:\\private\\tool.state")));
         using var runtime = BuildRuntime(Registration("provider.facade", [Entry(reference)], [tool]));
 
-        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -299,7 +300,7 @@ public sealed class PublicRuntimeFacadeTests
 
         runtime.Stop();
         runtime.Stop();
-        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -319,7 +320,7 @@ public sealed class PublicRuntimeFacadeTests
 
         runtime.Dispose();
         runtime.Dispose();
-        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference));
+        var result = await runtime.ExecuteAsync(new FacadeOperation(OperationId.New(), reference), cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -336,7 +337,7 @@ public sealed class PublicRuntimeFacadeTests
         var reference = Reference();
         using var runtime = BuildRuntime(Registration("provider.facade", [Entry(reference)], [new FacadeTool(reference)]));
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => runtime.ExecuteAsync<FacadeResult>(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => runtime.ExecuteAsync<FacadeResult>(null!, cancellationToken: TestContext.Current.CancellationToken));
     }
 
     [Fact]
