@@ -55,8 +55,8 @@ public sealed class ReleasePreparationArchitectureTests
             [
                 "Microsoft.Extensions.Hosting",
                 "Microsoft.NET.Test.Sdk",
-                "xunit",
-                "xunit.runner.visualstudio"
+                "xunit.runner.visualstudio",
+                "xunit.v3"
             ],
             packageVersions);
     }

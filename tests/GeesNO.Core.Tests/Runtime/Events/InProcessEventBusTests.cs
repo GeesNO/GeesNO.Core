@@ -152,7 +152,7 @@ public sealed class InProcessEventBusTests
 
         var first = bus.PublishAsync(ObservabilityTestData.Received(1));
         var second = bus.PublishAsync(ObservabilityTestData.Received(2));
-        await bothEntered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await bothEntered.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
         release.SetResult(true);
         await Task.WhenAll(first, second);
 
@@ -180,7 +180,7 @@ public sealed class InProcessEventBusTests
 
         var first = bus.PublishAsync(ObservabilityTestData.Received(1));
         var second = bus.PublishAsync(ObservabilityTestData.Received(2));
-        await second.WaitAsync(TimeSpan.FromSeconds(5));
+        await second.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
         Assert.False(first.IsCompleted);
         releaseFirst.SetResult(true);
         await first;

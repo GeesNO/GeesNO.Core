@@ -131,7 +131,7 @@ public sealed class NeutralSimulatorTests
         using var runtime = BuildRuntime(providerId);
         var operation = new NeutralEchoOperation(OperationId.New(), "explicit");
 
-        var result = await runtime.ExecuteAsync(operation, new ExecutionOptions(providerId));
+        var result = await runtime.ExecuteAsync(operation, new ExecutionOptions(providerId), TestContext.Current.CancellationToken);
 
         AssertSuccess(result, providerId, operation, "explicit");
     }
@@ -143,7 +143,7 @@ public sealed class NeutralSimulatorTests
         using var runtime = BuildRuntime(providerId);
         var operation = new NeutralEchoOperation(OperationId.New(), "implicit");
 
-        var result = await runtime.ExecuteAsync(operation);
+        var result = await runtime.ExecuteAsync(operation, cancellationToken: TestContext.Current.CancellationToken);
 
         AssertSuccess(result, providerId, operation, "implicit");
     }
@@ -156,7 +156,8 @@ public sealed class NeutralSimulatorTests
 
         var result = await runtime.ExecuteAsync(
             new NeutralEchoOperation(OperationId.New(), string.Empty),
-            new ExecutionOptions(providerId));
+            new ExecutionOptions(providerId),
+            TestContext.Current.CancellationToken);
 
         Assert.Equal(OperationExecutionStatus.FunctionalFailure, result.Status);
         Assert.False(result.IsSuccess);
@@ -176,7 +177,8 @@ public sealed class NeutralSimulatorTests
         using var runtime = BuildRuntime(providerA, providerB);
 
         var result = await runtime.ExecuteAsync(
-            new NeutralEchoOperation(OperationId.New(), "ambiguous"));
+            new NeutralEchoOperation(OperationId.New(), "ambiguous"),
+            cancellationToken: TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -194,7 +196,8 @@ public sealed class NeutralSimulatorTests
 
         var result = await runtime.ExecuteAsync(
             new NeutralEchoOperation(OperationId.New(), "missing provider"),
-            new ExecutionOptions(ProviderId.Parse("provider.missing-simulator")));
+            new ExecutionOptions(ProviderId.Parse("provider.missing-simulator")),
+            TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,
@@ -215,7 +218,8 @@ public sealed class NeutralSimulatorTests
 
         var result = await runtime.ExecuteAsync(
             new NeutralEchoOperation(OperationId.New(), "unavailable"),
-            new ExecutionOptions(providerId));
+            new ExecutionOptions(providerId),
+            TestContext.Current.CancellationToken);
 
         AssertPublicFailure(
             result,

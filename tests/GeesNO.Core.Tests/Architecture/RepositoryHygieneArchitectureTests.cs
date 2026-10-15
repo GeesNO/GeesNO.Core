@@ -82,6 +82,7 @@ public sealed class RepositoryHygieneArchitectureTests
                 "ISSUE_TEMPLATE/bug_report.yml",
                 "ISSUE_TEMPLATE/config.yml",
                 "ISSUE_TEMPLATE/feature_request.yml",
+                "dependabot.yml",
                 "pull_request_template.md",
                 "workflows/dotnet.yml",
                 "workflows/nuget-publish.yml"

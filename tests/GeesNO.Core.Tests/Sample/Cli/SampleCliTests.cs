@@ -229,9 +229,9 @@ public sealed class SampleCliTests
         using var output = new StringWriter(CultureInfo.InvariantCulture);
         using var error = new StringWriter(CultureInfo.InvariantCulture);
 
-        await Assert.ThrowsAsync<ArgumentNullException>(() => app.RunAsync(null!, output, error));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => app.RunAsync(Array.Empty<string>(), null!, error));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => app.RunAsync(Array.Empty<string>(), output, null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => app.RunAsync(null!, output, error, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => app.RunAsync(Array.Empty<string>(), null!, error, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => app.RunAsync(Array.Empty<string>(), output, null!, TestContext.Current.CancellationToken));
     }
 
     private static async Task<CliRunResult> RunAsync(params string[] args)

@@ -23,10 +23,11 @@ public sealed class RuntimeExceptionPolicyTests
         Assert.Throws<ArgumentNullException>(() => RuntimeExceptionPolicy.IsFatal(null!));
     }
 
-    public static TheoryData<Exception> FatalExceptions => new()
-    {
-        new OutOfMemoryException(),
-        new StackOverflowException(),
-        new AccessViolationException()
-    };
+    public static TheoryData<Exception> FatalExceptions => new(
+        new Exception[]
+        {
+            new OutOfMemoryException(),
+            new StackOverflowException(),
+            new AccessViolationException()
+        });
 }
